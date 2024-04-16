@@ -2,7 +2,11 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
+import bodyParser from 'body-parser';
 import mongooseConnection from './connection/db';
+import userRoutes from './routes/user';
+import adminRoutes from './routes/admin';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +15,11 @@ const PORT = process.env.PORT || 3000;
 mongooseConnection.once('open', () => {
     console.log('MongoDB connection is open');
 });
+
+app.use(bodyParser.json())
+app.use('/api/v1',userRoutes)
+app.use('/api/v1',adminRoutes)
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript server!');
