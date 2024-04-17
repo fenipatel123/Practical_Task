@@ -9,9 +9,7 @@ import adminRoutes from './routes/admin';
 import categoryRoutes from './routes/category';
 import productRoutes from './routes/product';
 import cartRoutes from './routes/cart';
-
-
-
+import orderRoutes from './routes/order';
 
 
 const app = express();
@@ -28,9 +26,7 @@ app.use('/api/v1',adminRoutes)
 app.use('/api/v1',categoryRoutes)
 app.use('/api/v1',productRoutes)
 app.use('/api/v1',cartRoutes)
-
-
-
+app.use('/api/v1',orderRoutes)
 
 
 app.get('/', (req: Request, res: Response) => {
