@@ -26,6 +26,7 @@ export const loginAdminUser = async (req: Request, res: Response): Promise<void>
 
     // Generate JWT token for admin user
     const payload = {
+      _id:adminUser._id,
       email: adminUser.email,
     }
 

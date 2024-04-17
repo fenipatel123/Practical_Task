@@ -21,10 +21,10 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
   
     try {
       const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-      const userEmail = decoded.email;
+      const userId = decoded._id;
   
       // Check if the user exists and has the admin role
-      const user: User | null = await userModel.findOne({ email: userEmail });
+      const user: User | null = await userModel.findOne({ _id: userId });
   
       if (!user || user.role !== 'Admin') {
         res.status(403).send({ message: 'Forbidden - You do not have access!' });

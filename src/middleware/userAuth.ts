@@ -19,6 +19,7 @@ export const userauth = async (req: Request, res: Response, next: NextFunction):
   
     try {
       const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+      console.log(decoded)
   
       // Attach the user object to the request for further processing
       req.user = decoded;

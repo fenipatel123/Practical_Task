@@ -8,6 +8,8 @@ import userRoutes from './routes/user';
 import adminRoutes from './routes/admin';
 import categoryRoutes from './routes/category';
 import productRoutes from './routes/product';
+import cartRoutes from './routes/cart';
+
 
 
 
@@ -25,6 +27,8 @@ app.use('/api/v1',userRoutes)
 app.use('/api/v1',adminRoutes)
 app.use('/api/v1',categoryRoutes)
 app.use('/api/v1',productRoutes)
+app.use('/api/v1',cartRoutes)
+
 
 
 
