@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel';
 import { User } from '../interface/user';
 
+
 export const loginAdminUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
@@ -26,8 +27,9 @@ export const loginAdminUser = async (req: Request, res: Response): Promise<void>
     // Generate JWT token for admin user
     const payload = {
       email: adminUser.email,
-    };
-    const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1d' });
 
     res.status(200).send({ message: 'Admin user login successful', token });
   } catch (error) {

@@ -58,3 +58,19 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   };
   
 
+  export const listOfUsers = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const users: User[] = await userModel.find();
+
+      if(users){
+        res.status(200).send({
+          message:'Users data fetched successfully',
+          usersData: users
+        });
+      }
+      res.status(200).send({})
+      
+    } catch (error) {
+      res.status(500).send({ message: 'Internal server error while processing your request!', error});
+    }
+  };

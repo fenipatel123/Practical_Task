@@ -7,6 +7,9 @@
       "strict": true,
       "moduleResolution": "node",
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts",],
   "exclude": ["node_modules"],
+  "files": [
+    "./src/custom.d.ts",
+  ]
 }
