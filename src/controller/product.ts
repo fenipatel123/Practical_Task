@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
 import ProductModel from '../models/productModel';
 import { Product } from '../interface/products'
+import { FilterQuery } from 'mongoose'
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, description, price, categoryId } = req.body;
+    const { name, description, price, category } = req.body;
 
     const newProduct = new ProductModel({
       name,
       description,
       price,
-      categoryId,
+      category,
     });
 
     await newProduct.save();
@@ -24,11 +25,11 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
     try {
       const productId  = req.params.id;
-      const { name, description, price, categoryId } = req.body;
+      const { name, description, price, category } = req.body;
 
       const updatedProduct : Product | null= await ProductModel.findOneAndUpdate(
         { _id: productId },
-        { $set: { name, description, price, categoryId } },
+        { $set: { name, description, price, category } },
         { merge: true } 
       );
   
@@ -63,7 +64,8 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 
   export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const products: Product[] = await ProductModel.find();
+        const products: Product[] = await ProductModel.find()
+        .populate('category','name')
 
         if (products) {
             res.status(200).send({
@@ -77,4 +79,54 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     } catch (error) {
         res.status(500).send({ message: 'Internal server error while processing your request!', error });
     }
+};
+
+export const listProductWithPagination = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const parsedPage = parseInt(page as string, 10);
+    const parsedLimit = parseInt(limit as string, 10);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const products :Product[] | null = await ProductModel.find()
+      .populate('category','name') 
+      .skip(skip)
+      .limit(parsedLimit)
+      .exec();
+
+    const total = await ProductModel.countDocuments().exec();
+
+    res.status(200).send({
+      products: products,
+      page: parsedPage,
+      totalCount: total,
+      totalPages: Math.ceil(total / parsedLimit),
+      
+    });
+  } catch (error) {
+    res.status(500).send({ message: 'Internal server error while processing your request!', error });
+  }
+};
+
+export const getAllProductsWithFilters = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, minPrice, maxPrice } = req.query;
+
+    const filters: FilterQuery<any> = {};
+    if (typeof name === 'string') filters.name = new RegExp(name, 'i'); 
+    if (typeof minPrice === 'string' && !isNaN(Number(minPrice))) filters.price = { $gte: Number(minPrice) }; 
+    if (typeof maxPrice === 'string' && !isNaN(Number(maxPrice))) {
+      if (filters.price) filters.price.$lte = Number(maxPrice);
+      else filters.price = { $lte: Number(maxPrice) };
+    }
+
+    const products : Product[] | null= await ProductModel.find(filters)
+      .populate('category', 'name') 
+      .exec();
+
+    res.status(200).send({products});
+  } catch (error) {
+    res.status(500).send({ message: 'Internal server error while processing your request!',error });
+  }
 };

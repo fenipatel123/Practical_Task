@@ -4,7 +4,7 @@ export interface Product{
     name: string;
     description: string;
     price: number;
-    categoryId: mongoose.Types.ObjectId; 
+    category: mongoose.Types.ObjectId; 
     createdAt: Date;
     updatedAt: Date;
 }
