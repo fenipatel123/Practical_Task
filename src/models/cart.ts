@@ -2,7 +2,6 @@
 import mongoose, { Schema, Model } from 'mongoose';
 import { Cart, CartItem } from '../interface/cart';
 
-// Define the cart schema
 const cartSchema = new Schema<Cart>({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   items: [{

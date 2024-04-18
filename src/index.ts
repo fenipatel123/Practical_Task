@@ -3,6 +3,8 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import bodyParser from 'body-parser';
+import  specs  from './swaggerConfig';
+import swaggerUi from 'swagger-ui-express'
 import mongooseConnection from './connection/db';
 import userRoutes from './routes/user';
 import adminRoutes from './routes/admin';
@@ -21,13 +23,15 @@ mongooseConnection.once('open', () => {
 });
 
 app.use(bodyParser.json())
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 app.use('/api/v1',userRoutes)
 app.use('/api/v1',adminRoutes)
 app.use('/api/v1',categoryRoutes)
 app.use('/api/v1',productRoutes)
 app.use('/api/v1',cartRoutes)
 app.use('/api/v1',orderRoutes)
-
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from Express + TypeScript server!');

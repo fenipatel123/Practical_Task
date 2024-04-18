@@ -68,6 +68,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
           message:'Users data fetched successfully',
           usersData: users
         });
+        return;
       }
       res.status(200).send({})
       

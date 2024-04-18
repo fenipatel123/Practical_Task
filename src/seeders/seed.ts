@@ -1,5 +1,4 @@
 import mongoose, { ConnectOptions } from "mongoose";
-import { User } from '../interface/user';
 import userModel from '../models/userModel'
 import bcrypt from 'bcrypt'
 import dotenv from "dotenv";
@@ -9,7 +8,7 @@ import path from 'path';
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 
-const adminData: User = {
+const adminData = {
   name: 'Admin_User',
   email: 'admin@123.com',
   password:'admin@123',
